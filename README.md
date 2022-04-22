@@ -22,9 +22,15 @@ This inherits all other functions from the Matrix class.
 Standard functions such as +-* can also be used
 
 ## Example
-    mat1 = Matrix("1 2 2", "4 5 6", "7 8 9")
-    mat2 = Matrix_List([1, 2, 2], [4, 5, 6], [7, 8, 9])
-    inverse1 = mat1.inverse()
-    inverse2 = mat2.inverse()
-    inverse1 == inverse2  # Is True
-    print(inverse1)
+```python
+mat1 = Matrix("1 2 2", "4 5 6", "7 8 9")
+mat2 = Matrix_List([1, 2, 2], [4, 5, 6], [7, 8, 9])
+inverse1 = mat1.inverse()
+inverse2 = mat2.inverse()
+inverse1 == inverse2  # Is True
+print(inverse1)
+```
+
+## TODO
+- [ ] Make \_\_getabbr__ return a column instead of a row
+- [ ] Make a vector class
