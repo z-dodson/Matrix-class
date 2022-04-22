@@ -1,14 +1,14 @@
 # Matrix-class
-A class for storing matrices
+A class for storing matrices  
 Can also be used to solve simultaneous equations in matrix form
 
 ## Matrix
-The standard class for matrices
-Input a matrix string separating each value with a space
+The standard class for matrices  
+Input a matrix string separating each value with a space  
 Each row is separated by a new string
 
 ## Matrix_List
-This class allows matrices to be entered as a series of lists
+This class allows matrices to be entered as a series of lists  
 This inherits all other functions from the Matrix class.
 
 ## Functions
