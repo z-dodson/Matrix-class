@@ -30,6 +30,9 @@ inverse1 == inverse2  # Is True
 print(inverse1)
 ```
 
+## Vectors
+Vectors function in a similar way to matrices. There are no dedicated vector functions, but they can be used like a matrix
+
 ## Simultaneous Equations
 Can solve simultaneous equations if given in matrix form. E.g.
 ```
