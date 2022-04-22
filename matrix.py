@@ -1,3 +1,11 @@
+# TODO:
+# [X] Add a new class that takes a list of lists and creates a matrix
+# [X] Change the print function to print the matrix in a nice way:
+#       e.g.
+#        |‾ 1 2 3 ‾|      / 1 2 3 \     / 1 2 \    |‾ 1 2 ‾|
+#        |  4 5 6  |     |  4 5 6  |    \ 3 4 /    |_ 3 4 _|
+#        |_ 7 8 9 _|      \ 7 8 9 /     
+
 class Matrix:
     '''
     Base matrix class
@@ -16,10 +24,6 @@ class Matrix:
     '''
     def __init__(self, *matrix_string):
         self.matrix = [[float(num) for num in row.split()] for row in matrix_string]
-
-    def print(self):
-        for row in self.matrix:
-            print(*row)
 
     def dimensions(self):
         return (len(self.matrix[0]), len(self.matrix))
@@ -179,13 +183,26 @@ class Matrix:
         return new_matrix
 
     def __str__(self):
+        dim = self.dimensions()
         matrix_string = ""
         for i in range(len(self.matrix)):
-            for j in self.matrix[i]:
-                matrix_string += str(j)
+            if i == 0:
+                matrix_string += " / "
+            elif dim[1]-1 == i:
+                matrix_string += " \\ "
+            else:
+                matrix_string += "|  "
+            for j in range(len(self.matrix[i])):
+                matrix_string += str(self.matrix[i][j])
                 matrix_string += " "
+            if i == 0:
+                matrix_string += "\\"
+            elif dim[1]-1 == i:
+                matrix_string += "/"
+            else:
+                matrix_string += " |"
             matrix_string += "\n"
-        return matrix_string[:-2]
+        return matrix_string[:-1]
 
     def __repr__(self):
         return self.__str__()
@@ -198,6 +215,14 @@ class Matrix:
 
     def __getitem__(self, index):
         return self.matrix[index]
+
+class Matrix_List(Matrix):
+    def __init__(self, *mat_list):
+        matrix = []
+        for i in range(len(mat_list)):
+            row = ' '.join(str(num) for num in mat_list[i])
+            matrix.append(row)
+        super().__init__(*matrix)
 
 class Not_Compatible_Error(Exception):
     def __init__(self):
@@ -218,3 +243,6 @@ class Unknow_Inverse(Exception):
 class No_Inverse(Exception):
     def __init__(self):
         raise Exception('The matrix does not have an inverse')
+
+m1 = Matrix_List([1, 2, 3], [4, 5, 6], [7, 8, 9])
+print(m1)
