@@ -22,7 +22,7 @@ class Matrix:
     If using slice notation, the row is selected first
     Alegbra not supported
     '''
-    def __init__(self, *matrix_string):
+    def __init__(self, *matrix_string, vector=False):
         self.matrix = [[float(num) for num in row.split()] for row in matrix_string]
 
     def dimensions(self):
@@ -185,23 +185,26 @@ class Matrix:
     def __str__(self):
         dim = self.dimensions()
         matrix_string = ""
-        for i in range(len(self.matrix)):
-            if i == 0:
-                matrix_string += " / "
-            elif dim[1]-1 == i:
-                matrix_string += " \\ "
-            else:
-                matrix_string += "|  "
-            for j in range(len(self.matrix[i])):
-                matrix_string += str(self.matrix[i][j])
-                matrix_string += " "
-            if i == 0:
-                matrix_string += "\\"
-            elif dim[1]-1 == i:
-                matrix_string += "/"
-            else:
-                matrix_string += " |"
-            matrix_string += "\n"
+        if dim[1] == 1:
+            matrix_string = "(" + " ".join(str(num) for num in self.matrix[0]) + ") "
+        else:
+            for i in range(len(self.matrix)):
+                if i == 0:
+                    matrix_string += " / "
+                elif dim[1]-1 == i:
+                    matrix_string += " \\ "
+                else:
+                    matrix_string += "|  "
+                for j in range(len(self.matrix[i])):
+                    matrix_string += str(self.matrix[i][j])
+                    matrix_string += " "
+                if i == 0:
+                    matrix_string += "\\"
+                elif dim[1]-1 == i:
+                    matrix_string += "/"
+                else:
+                    matrix_string += " |"
+                matrix_string += "\n"
         return matrix_string[:-1]
 
     def __repr__(self):
@@ -224,6 +227,27 @@ class Matrix_List(Matrix):
             matrix.append(row)
         super().__init__(*matrix)
 
+class Vector(Matrix):
+    def __init__(self, *vector_list):
+        vector = [str(num) for num in vector_list]
+        super().__init__(*vector)
+
+    def determinant(self):
+        pass
+
+    def transpose(self):
+        pass
+
+    def inverse(self):
+        pass
+    
+    def minors(self):
+        pass
+
+    def cofactors(self):
+        pass
+
+
 class Not_Compatible_Error(Exception):
     def __init__(self):
         raise Exception('Matrices are not compatible')
@@ -244,5 +268,9 @@ class No_Inverse(Exception):
     def __init__(self):
         raise Exception('The matrix does not have an inverse')
 
-m1 = Matrix_List([1, 2, 3], [4, 5, 6], [7, 8, 9])
-print(m1)
+def simultaneous_eq(matrix, vector):
+    if matrix.dimensions()[1] != (vector.dimensions()[1]):
+        raise Not_Compatible_Error()
+    else:
+        new_matrix = matrix.inverse()*vector
+        return new_matrix
