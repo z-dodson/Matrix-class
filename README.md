@@ -1,6 +1,5 @@
 # Matrix-class
 A class for storing matrices  
-Can also be used to solve simultaneous equations in matrix form
 
 ## Matrix
 The standard class for matrices  
@@ -31,6 +30,14 @@ inverse1 == inverse2  # Is True
 print(inverse1)
 ```
 
-## TODO
-- [ ] Make `__getabbr__` function return a column instead of a row
-- [ ] Make a vector class
+## Simultaneous Equations
+Can solve simultaneous equations if given in matrix form. E.g.
+```
+x + y - z = 1
+8x + 3y -6 = 1
+-4x -y + 3z= 1
+
+ / 1 1 -1 \     / x \     / 1 \
+|  8 3 -6  | * |  y  | = |  1  |
+ \-4 -1 3 /     \ z /     \ 1 /
+```
