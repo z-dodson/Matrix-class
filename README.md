@@ -32,5 +32,5 @@ print(inverse1)
 ```
 
 ## TODO
-- [ ] Make \_\_getabbr__ return a column instead of a row
+- [ ] Make `__getabbr__` function return a column instead of a row
 - [ ] Make a vector class
