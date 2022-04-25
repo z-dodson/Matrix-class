@@ -22,11 +22,11 @@ Standard functions such as +-* can also be used
 
 ## Example
 ```python
-mat1 = Matrix("1 2 2", "4 5 6", "7 8 9")
-mat2 = Matrix_List([1, 2, 2], [4, 5, 6], [7, 8, 9])
+mat1 = Matrix([1, 2, 2], [4, 5, 6], [7, 8, 9])
+mat2 = Matrix_string("1 2 2", "4 5 6", "7 8 9")
 inverse1 = mat1.inverse()
 inverse2 = mat2.inverse()
-inverse1 == inverse2  # Is True
+inverse1 == inverse2  # True
 print(inverse1)
 ```
 
@@ -40,9 +40,9 @@ x + y - z = 1
 8x + 3y -6 = 1
 -4x -y + 3z= 1
 
- / 1 1 -1 \     / x \     / 1 \
+|‾ 1 1 -1 ‾|   |‾ x ‾|   |‾ 1 ‾|
 |  8 3 -6  | * |  y  | = |  1  |
- \-4 -1 3 /     \ z /     \ 1 /
+|_-4 -1 3 _|   |_ z _|   |_ 1 _|
 ```
 
 ## Colaborators

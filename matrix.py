@@ -1,16 +1,8 @@
-# TODO:
-# [X] Add a new class that takes a list of lists and creates a matrix
-# [X] Change the print function to print the matrix in a nice way:
-#       e.g.
-#        |‾ 1 2 3 ‾|      / 1 2 3 \     / 1 2 \    |‾ 1 2 ‾|
-#        |  4 5 6  |     |  4 5 6  |    \ 3 4 /    |_ 3 4 _|
-#        |_ 7 8 9 _|      \ 7 8 9 /     
-
 class Matrix:
     '''
     Base matrix class
-    Input a matrix string separating each value with a space
-    Each row is separated by a new string
+    Input as a series of lists
+    Each row is a new list
     Functions:
         - dimensions
         - determinant
@@ -19,11 +11,14 @@ class Matrix:
         - cofactors (finds the matrix of cofactors)
         - minors (finds the matrix of minors)
     Can also add, subtract, multiply, and raise to a power
-    If using slice notation, the row is selected first
+    If selecting or setting a specific item, use [row, column] syntax
     Alegbra not supported
     '''
-    def __init__(self, *matrix_string, vector=False):
-        self.matrix = [[float(num) for num in row.split()] for row in matrix_string]
+    def __init__(self, *matrix_list):
+        self.matrix = []
+        for i in range(len(matrix_list)):
+            row = [float(num) for num in matrix_list[i]]
+            self.matrix.append(row)
 
     def dimensions(self):
         return (len(self.matrix[0]), len(self.matrix))
@@ -186,22 +181,22 @@ class Matrix:
         dim = self.dimensions()
         matrix_string = ""
         if dim[1] == 1:
-            matrix_string = "(" + " ".join(str(num) for num in self.matrix[0]) + ") "
+            matrix_string = "[" + " ".join(str(num) for num in self.matrix[0]) + "] "
         else:
             for i in range(len(self.matrix)):
                 if i == 0:
-                    matrix_string += " / "
+                    matrix_string += "|‾ "
                 elif dim[1]-1 == i:
-                    matrix_string += " \\ "
+                    matrix_string += "|_ "
                 else:
                     matrix_string += "|  "
                 for j in range(len(self.matrix[i])):
                     matrix_string += str(self.matrix[i][j])
                     matrix_string += " "
                 if i == 0:
-                    matrix_string += "\\"
+                    matrix_string += "‾|"
                 elif dim[1]-1 == i:
-                    matrix_string += "/"
+                    matrix_string += "_|"
                 else:
                     matrix_string += " |"
                 matrix_string += "\n"
@@ -217,14 +212,27 @@ class Matrix:
         return not self.__eq__(other)
 
     def __getitem__(self, index):
-        return self.matrix[index]
+        return self.matrix[index[1]][index[0]]
 
-class Matrix_List(Matrix):
-    def __init__(self, *mat_list):
-        matrix = []
-        for i in range(len(mat_list)):
-            row = ' '.join(str(num) for num in mat_list[i])
-            matrix.append(row)
+    def __setitem__(self, index, value):
+        self.matrix[index[1]][index[0]] = float(value)
+
+    def __abs__(self):
+        return self.determinant()
+
+    def __len__(self):
+        return self.dimensions()
+
+    def __contains__(self, item):
+        found = False
+        for i in self.matrix:
+            if item in i:
+                found = True
+        return found
+
+class Matrix_String(Matrix):
+    def __init__(self, *matrix_string):
+        matrix = [[float(num) for num in row.split()] for row in matrix_string]
         super().__init__(*matrix)
 
 class Vector(Matrix):
@@ -274,3 +282,6 @@ def simultaneous_eq(matrix, vector):
     else:
         new_matrix = matrix.inverse()*vector
         return new_matrix
+
+m = Matrix([1, 2, 3], [4, 4, 6], [7, 8, 9])
+print(m)
