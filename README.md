@@ -44,6 +44,22 @@ x + y - z = 1
 |  8 3 -6  | * |  y  | = |  1  |
 |_-4 -1 3 _|   |_ z _|   |_ 1 _|
 ```
+```python
+mat = Matrix([1, 1, -1],
+             [8, 3, -6],
+             [-4, -1, 3])
+
+vec = Vector([1, 1, 1])
+
+ans = simultaneous_eq(mat, vec)
+print(ans)
+```
+Output:
+```
+|‾ 2.0 ‾|
+|  3.0  |
+|_ 4.0 _|
+```
 
 ## Colaborators
 Please create a new branch for any changes
