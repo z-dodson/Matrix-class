@@ -60,6 +60,3 @@ Output:
 |  3.0  |
 |_ 4.0 _|
 ```
-
-## Colaborators
-Please create a new branch for any changes
