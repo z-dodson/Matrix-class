@@ -13,7 +13,7 @@ This inherits all other functions from the Matrix class.
 - dimensions -> tuple (returns the dimensions of the matrix)
 - determinant -> float (calculates the determinant)
 - transpose -> Matrix (transposes the matrix)
-- inverse -> Matrix (finds the inverse of the matrix. Can also be called with **-1)
+- inverse -> Matrix (finds the inverse of the matrix. Can also be called with **-1 or abs(matrix))
 - cofactors -> Matrix (finds the matrix of cofactors)
 - minors -> Matrix (finds the matrix of minors)
 
