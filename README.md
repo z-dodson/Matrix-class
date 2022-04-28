@@ -3,8 +3,7 @@ A class for storing matrices
 
 ## Matrix
 The standard class for matrices  
-Input a matrix string separating each value with a space  
-Each row is separated by a new string
+Input a matrix in a list, separating each row with a new list
 
 ## Matrix_List
 This class allows matrices to be entered as a series of lists  
@@ -52,11 +51,7 @@ mat = Matrix([1, 1, -1],
 vec = Vector([1, 1, 1])
 
 ans = simultaneous_eq(mat, vec)
-print(ans)
-```
-Output:
-```
-|‾ 2.0 ‾|
-|  3.0  |
-|_ 4.0 _|
+print(ans) -> |‾ 2.0 ‾|
+              |  3.0  |
+              |_ 4.0 _|
 ```
