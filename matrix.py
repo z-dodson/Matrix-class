@@ -344,13 +344,3 @@ def simultaneous_eq(matrix, vector):
     else:
         new_matrix = matrix.inverse()*vector
         return new_matrix
-
-# https://corbettmaths.com/wp-content/uploads/2019/10/3-Unknowns-Answers.pdf
-
-mat = Matrix([1, -1, 3], [1, 1, 6], [3, -2, 2])
-vec = Vector([5, 12, 10])
-print(mat)
-print(vec)
-ans = mat.inverse()*vec
-
-print(ans.round(3))
