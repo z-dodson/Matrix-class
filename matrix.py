@@ -15,6 +15,7 @@ class Matrix:
     Alegbra not supported
     '''
     def __init__(self, *matrix_list):
+        self.vector = False
         self.matrix = []
         for i in range(len(matrix_list)):
             row = [float(num) for num in matrix_list[i]]
@@ -43,8 +44,8 @@ class Matrix:
         for i in range(len(self.matrix[0])):
             new_row = []
             for j in range(len(self.matrix)):
-                new_row.append(str(self.matrix[j][i]))
-            new_matrix.append(' '.join(new_row))
+                new_row.append(self.matrix[j][i])
+            new_matrix.append(new_row)
         return Matrix(*new_matrix)
 
     def inverse(self):
@@ -66,13 +67,13 @@ class Matrix:
                 raise No_Inverse()
             else:
                 a, b, c, d = self.matrix[0][0], self.matrix[0][1], self.matrix[1][0], self.matrix[1][1]
-                new_matrix = [f"{d} {-b}", f"{-c} {a}"]
+                new_matrix = [[d, -b], [-c, a]]
                 inverse_matrix = (1/self.determinant())*Matrix(*new_matrix)
                 return inverse_matrix
 
         elif self.dimensions() == (1, 1):
             reciprocal = 1/self.matrix[0][0]
-            return Matrix(str(reciprocal))
+            return Matrix([reciprocal])
 
         else:
             raise Unknow_Inverse(*self.dimensions())
@@ -83,10 +84,10 @@ class Matrix:
             new_row = []
             for j in range(len(mat_minors.matrix[i])):
                 if (i+j) % 2 == 0:
-                    new_row.append(str(int(mat_minors.matrix[i][j])))
+                    new_row.append(float(mat_minors.matrix[i][j]))
                 else:
-                    new_row.append(str(mat_minors.matrix[i][j] * -1))
-            mat_cofactors.append(' '.join(new_row))
+                    new_row.append(mat_minors.matrix[i][j] * -1)
+            mat_cofactors.append(new_row)
         mat_cofactors = Matrix(*mat_cofactors)
         return mat_cofactors
 
@@ -97,30 +98,39 @@ class Matrix:
             for j in range(len(self.matrix[i])):
                 if j == 0:
                     if i == 0:
-                        matrix2x2 = [f'{self.matrix[1][1]} {self.matrix[1][2]}', f'{self.matrix[2][1]} {self.matrix[2][2]}']
+                        matrix2x2 = [[self.matrix[1][1], self.matrix[1][2]], [self.matrix[2][1], self.matrix[2][2]]]
                     elif i == 1:
-                        matrix2x2 = [f'{self.matrix[0][1]} {self.matrix[0][2]}', f'{self.matrix[2][1]} {self.matrix[2][2]}']
+                        matrix2x2 = [[self.matrix[0][1], self.matrix[0][2]], [self.matrix[2][1], self.matrix[2][2]]]
                     elif i == 2:
-                        matrix2x2 = [f'{self.matrix[0][1]} {self.matrix[0][2]}', f'{self.matrix[1][1]} {self.matrix[1][2]}']
+                        matrix2x2 = [[self.matrix[0][1], self.matrix[0][2]], [self.matrix[1][1], self.matrix[1][2]]]
                 elif j == 1:
                     if i == 0:
-                        matrix2x2 = [f'{self.matrix[1][0]} {self.matrix[1][2]}', f'{self.matrix[2][0]} {self.matrix[2][2]}']
+                        matrix2x2 = [[self.matrix[1][0], self.matrix[1][2]], [self.matrix[2][0], self.matrix[2][2]]]
                     elif i == 1:
-                        matrix2x2 = [f'{self.matrix[0][0]} {self.matrix[0][2]}', f'{self.matrix[2][0]} {self.matrix[2][2]}']
+                        matrix2x2 = [[self.matrix[0][0], self.matrix[0][2]], [self.matrix[2][0], self.matrix[2][2]]]
                     elif i == 2:
-                        matrix2x2 = [f'{self.matrix[0][0]} {self.matrix[0][2]}', f'{self.matrix[1][0]} {self.matrix[1][2]}']
+                        matrix2x2 = [[self.matrix[0][0], self.matrix[0][2]], [self.matrix[1][0], self.matrix[1][2]]]
                 elif j == 2:
                     if i == 0:
-                        matrix2x2 = [f'{self.matrix[1][0]} {self.matrix[1][1]}', f'{self.matrix[2][0]} {self.matrix[2][1]}']
+                        matrix2x2 = [[self.matrix[1][0], self.matrix[1][1]], [self.matrix[2][0], self.matrix[2][1]]]
                     elif i == 1:
-                        matrix2x2 = [f'{self.matrix[0][0]} {self.matrix[0][1]}', f'{self.matrix[2][0]} {self.matrix[2][1]}']
+                        matrix2x2 = [[self.matrix[0][0], self.matrix[0][1]], [self.matrix[2][0], self.matrix[2][1]]]
                     elif i == 2:
-                        matrix2x2 = [f'{self.matrix[0][0]} {self.matrix[0][1]}', f'{self.matrix[1][0]} {self.matrix[1][1]}']
+                        matrix2x2 = [[self.matrix[0][0], self.matrix[0][1]], [self.matrix[1][0], self.matrix[1][1]]]
                 matrix2x2 = Matrix(*matrix2x2)
                 new_row.append(str(matrix2x2.determinant()))
-            mat_minors.append(' '.join(new_row))
+            mat_minors.append(new_row)
         mat_minors = Matrix(*mat_minors)
         return mat_minors
+
+    def round(self, num):
+        new_matrix = []
+        for row in self.matrix:
+            new_matrix.append([round(number, num) for number in row])
+
+        return Matrix(*new_matrix)
+
+
 
     def __add__(self, other):
         new_matrix = []
@@ -146,20 +156,41 @@ class Matrix:
             for i in range(self.dimensions()[1]):
                 new_row = []
                 for j in range(self.dimensions()[0]):
-                    new_row.append(str(self.matrix[i][j] * other))
-                new_matrix.append(' '.join(new_row))
+                    new_row.append(self.matrix[i][j] * other)
+                new_matrix.append(new_row)
             return Matrix(*new_matrix)
         # check that matrices are compatible
-        elif self.dimensions()[0] == other.dimensions()[1]:
-            new_matrix = []
+        elif isinstance(self, Matrix) and isinstance(other, Matrix):
+            if self.dimensions()[0] == other.dimensions()[1]:
+                if not isinstance(other, Vector) and not isinstance(self, Vector) and isinstance(other, Matrix) and isinstance(self, Matrix): # Check that they are both matrices and not vectors
+                    new_matrix = []
 
-            for i in range(self.dimensions()[1]):
-                new_row = []
-                for j in range(other.dimensions()[0]):
-                    new_row.append(str(sum([self.matrix[i][k] * other.matrix[k][j] for k in range(len(self.matrix[i]))])))
-                new_matrix.append(' '.join(new_row))
+                    for i in range(self.dimensions()[1]):
+                        new_row = []
+                        for j in range(other.dimensions()[0]):
+                            new_row.append(sum([self.matrix[i][k] * other.matrix[k][j] for k in range(len(self.matrix[i]))]))
+                        new_matrix.append(new_row)
 
-            return Matrix(*new_matrix)
+                    return Matrix(*new_matrix)
+
+                elif not all((isinstance(other, Vector), isinstance(self, Vector))) or (isinstance(other, Vector) and not isinstance(self, Vector)) or (isinstance(self, Vector) and not isinstance(other, Vector)):
+                    if isinstance(other, Vector):
+                        new_matrix = []
+
+                        for i in range(self.dimensions()[1]):
+                            new_row = []
+                            for j in range(other.dimensions()[0]):
+                                new_row.append(sum([self.matrix[i][k] * other.matrix[k] for k in range(len(self.matrix[i]))]))
+                            new_matrix.append(new_row)
+                    elif isinstance(self, Vector):
+                        new_matrix = []
+
+                        for i in range(self.dimensions()[1]):
+                            new_row = []
+                            for j in range(other.dimensions()[0]):
+                                new_row.append(sum([self.matrix[i][k] * other.matrix[k][j] for k in range(len(self.matrix[i]))]))
+                            new_matrix.append(new_row)
+                    return Matrix(*new_matrix)
         else:
             raise Not_Compatible_Error()
 
@@ -220,9 +251,6 @@ class Matrix:
     def __abs__(self):
         return self.determinant()
 
-    def __len__(self):
-        return self.dimensions()
-
     def __contains__(self, item):
         found = False
         for i in self.matrix:
@@ -236,9 +264,43 @@ class Matrix_String(Matrix):
         super().__init__(*matrix)
 
 class Vector(Matrix):
-    def __init__(self, *vector_list):
-        vector = [str(num) for num in vector_list]
-        super().__init__(*vector)
+    def __init__(self, vector_list):
+        self.matrix = [float(num) for num in vector_list]
+        self.vector = True
+
+    def round(self, num):        
+        new_matrix = []
+        for number in self.matrix:
+            new_matrix.append(round(number, num))
+
+        return Matrix(*new_matrix)
+
+    def __str__(self):
+        dim = self.dimensions()
+        matrix_string = ""
+        if dim[1] == 1:
+            matrix_string = "[" + " ".join(str(num) for num in self.matrix[0]) + "] "
+        else:
+            for i in range(len(self.matrix)):
+                if i == 0:
+                    matrix_string += "|‾ "
+                elif dim[1]-1 == i:
+                    matrix_string += "|_ "
+                else:
+                    matrix_string += "|  "
+                matrix_string += str(self.matrix[i])
+                matrix_string += " "
+                if i == 0:
+                    matrix_string += "‾|"
+                elif dim[1]-1 == i:
+                    matrix_string += "_|"
+                else:
+                    matrix_string += " |"
+                matrix_string += "\n"
+        return matrix_string[:-1]
+
+    def dimensions(self):
+        return (1, len(self.matrix))
 
     def determinant(self):
         pass
@@ -283,5 +345,12 @@ def simultaneous_eq(matrix, vector):
         new_matrix = matrix.inverse()*vector
         return new_matrix
 
-m = Matrix([1, 2, 3], [4, 4, 6], [7, 8, 9])
-print(m)
+# https://corbettmaths.com/wp-content/uploads/2019/10/3-Unknowns-Answers.pdf
+
+mat = Matrix([1, -1, 3], [1, 1, 6], [3, -2, 2])
+vec = Vector([5, 12, 10])
+print(mat)
+print(vec)
+ans = mat.inverse()*vec
+
+print(ans.round(3))
