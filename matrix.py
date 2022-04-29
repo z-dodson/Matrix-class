@@ -1,7 +1,5 @@
-# TODO:
-# [ ] Make vector __str__ method act in the same way as the matrix __str__ method
-#     i.e. make the 'brackets' line up
-# [ ] Check every item in the matrix to make sure it is a number and not empty
+from math import acos, pi
+
 
 class Matrix:
     '''
@@ -20,6 +18,10 @@ class Matrix:
     Alegbra not supported
     '''
     def __init__(self, *matrix_list):
+        rowlen = max(len(row) for row in matrix_list)
+        for row in matrix_list:
+            if len(row) != rowlen:
+                raise Invalid_Matrix()
         self.vector = False
         self.matrix = []
         for i in range(len(matrix_list)):
@@ -61,12 +63,12 @@ class Matrix:
                 mat_minors = self.minors()
 
                 mat_cofactors = self.cofactors(mat_minors)
-                
+
                 mat_tranposed = mat_cofactors.transpose()
 
                 inverse_matrix = (1/self.determinant())*mat_tranposed
                 return inverse_matrix
-            
+
         elif self.dimensions() == (2, 2):
             if self.determinant() == 0:
                 raise No_Inverse()
@@ -128,6 +130,9 @@ class Matrix:
         mat_minors = Matrix(*mat_minors)
         return mat_minors
 
+    def adjoint(self):
+        return self.cofactors(self.minors()).transpose()
+
     def round(self, num):
         new_matrix = []
         for row in self.matrix:
@@ -155,13 +160,22 @@ class Matrix:
 
     def __mul__(self, other):
         if isinstance(other, int) or isinstance(other, float):
-            new_matrix = []
-            for i in range(self.dimensions()[1]):
-                new_row = []
-                for j in range(self.dimensions()[0]):
-                    new_row.append(self.matrix[i][j] * other)
-                new_matrix.append(new_row)
-            return Matrix(*new_matrix)
+            if isinstance(self, Vector):
+                new_matrix = []
+                for i in range(self.dimensions()[1]):
+                    new_row = []
+                    for j in range(self.dimensions()[0]):
+                        new_row.append(self.matrix[i] * other)
+                    new_matrix.append(new_row)
+                return Matrix(*new_matrix)
+            else:
+                new_matrix = []
+                for i in range(self.dimensions()[1]):
+                    new_row = []
+                    for j in range(self.dimensions()[0]):
+                        new_row.append(self.matrix[i][j] * other)
+                    new_matrix.append(new_row)
+                return Matrix(*new_matrix)
         # check that matrices are compatible
         elif isinstance(self, Matrix) and isinstance(other, Matrix):
             if self.dimensions()[0] == other.dimensions()[1]:
@@ -213,7 +227,7 @@ class Matrix:
 
     def __str__(self):
         dim = self.dimensions()
-        
+
         if dim[0] != 1:
             # Make every item in column the same length
             string_values = []
@@ -227,7 +241,7 @@ class Matrix:
                 for j in range(len(self.matrix[i])):
                     lens.append(len(str(self.matrix[i][j])))
                     column.append(str(self.matrix[i][j]))
-                
+
                 max_length = max(lens)
 
                 for j in range(len(column)):
@@ -250,7 +264,7 @@ class Matrix:
 
                 lens.append(len(str(self.matrix[i][0])))
                 column.append(str(self.matrix[i][0]))
-                
+
             max_length = max(lens)
 
             for j in range(len(column)):
@@ -262,7 +276,7 @@ class Matrix:
             for i in range(len(column)):
                 string_values[i].append(column[i])
 
-            
+
 
 
         matrix_string = ""
@@ -288,7 +302,7 @@ class Matrix:
                     matrix_string_list[i] = "|  " + matrix_string_list[i] + "  |"
                     # matrix_string_list[i] += " |"
             matrix_string = "\n".join(matrix_string_list)
-            
+
 
         return matrix_string[:-1]
 
@@ -317,27 +331,54 @@ class Matrix:
                 found = True
         return found
 
-class Matrix_String(Matrix):
-    def __init__(self, *matrix_string):
-        matrix = [[float(num) for num in row.split()] for row in matrix_string]
-        super().__init__(*matrix)
 
 class Vector(Matrix):
     def __init__(self, vector_list):
         self.matrix = [float(num) for num in vector_list]
         self.vector = True
 
-    def round(self, num):        
+    def round(self, num):
         new_matrix = []
         for number in self.matrix:
             new_matrix.append(round(number, num))
 
         return Matrix(*new_matrix)
 
+    def angle(self, other, radians=True):
+        '''
+        Calculates the angle between two vectors
+        Angle defaults to radians
+        Optional parameter to return in degrees (radians=False)
+        '''
+        if isinstance(other, Vector):
+            if radians:
+                return acos(self.dot(other) / (abs(self) * abs(other)))
+            else:
+                return acos(self.dot(other) / (abs(self) * abs(other))) * 180 / pi
+        else:
+            raise Not_Compatible_Error()
+
+    def unit(self):
+        return self.__mul__(1/abs(self))
+
+    def dot(self, other):
+        num = 0
+        for i in range(len(self.matrix)):
+            num += self.matrix[i] * other.matrix[i]
+        return num
+
+    def cross(self, other):
+        if len(self.matrix) != 3 or len(other.matrix) != 3:
+            raise Cannot_Perform_Cross_Product()
+        else:
+            return Vector([self.matrix[1] * other.matrix[2] - self.matrix[2] * other.matrix[1],
+                          self.matrix[2] * other.matrix[0] - self.matrix[0] * other.matrix[2],
+                          self.matrix[0] * other.matrix[1] - self.matrix[1] * other.matrix[0]])
+
     def __str__(self):
         dim = self.dimensions()
 
-        
+
         # Make every item in column the same length
         string_values = []
         for j in range(len(self.matrix)):
@@ -384,6 +425,12 @@ class Vector(Matrix):
                 matrix_string += "\n"
         return matrix_string[:-1]
 
+    def __abs__(self):
+        num = 0
+        for i in range(len(self.matrix)):
+            num += self.matrix[i]**2
+        return num**(1/2)
+
     def dimensions(self):
         return (1, len(self.matrix))
 
@@ -395,7 +442,7 @@ class Vector(Matrix):
 
     def inverse(self):
         pass
-    
+
     def minors(self):
         pass
 
@@ -407,21 +454,36 @@ class Not_Compatible_Error(Exception):
     def __init__(self):
         raise Exception('Matrices are not compatible')
 
+
 class Power_Not_Positive_Error(Exception):
     def __init__(self):
         raise Exception('Power must be positive integer')
+
 
 class Unknow_Determinant(Exception):
     def __init__(self, dimx, dimy):
         raise Exception('Cannot calculate the determinant for a {}x{} matrix'.format(dimx, dimy))
 
+
 class Unknow_Inverse(Exception):
     def __init__(self, dimx, dimy):
         raise Exception('Cannot calculate the inverse for a {}x{} matrix'.format(dimx, dimy))
 
+
 class No_Inverse(Exception):
     def __init__(self):
         raise Exception('The matrix does not have an inverse')
+
+
+class Invalid_Matrix(Exception):
+    def __init__(self):
+        raise Exception("Not every term in the matrix filled in")
+
+
+class Cannot_Perform_Cross_Product(Exception):
+    def __init__(self):
+        raise Exception("Cannot perform cross product with these vectors")
+
 
 def simultaneous_eq(matrix, vector):
     if matrix.dimensions()[1] != (vector.dimensions()[1]):
@@ -429,9 +491,3 @@ def simultaneous_eq(matrix, vector):
     else:
         new_matrix = matrix.inverse()*vector
         return new_matrix
-
-mat = Matrix([-1, 1, 2], [3, -1, -2], [5, 10, 88888888888.888])
-vec = Vector([2.1, -2.5, 4.5555])
-ans = mat.inverse()*vec
-
-print(ans.round(3))
