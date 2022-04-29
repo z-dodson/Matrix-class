@@ -5,7 +5,7 @@ A class for storing matrices
 The standard class for matrices  
 Input a matrix in a list, separating each row with a new list
 
-## Functions
+### Functions
 - dimensions -> tuple (returns the dimensions of the matrix)
 - determinant -> float (calculates the determinant)
 - transpose -> Matrix (transposes the matrix)
@@ -15,7 +15,7 @@ Input a matrix in a list, separating each row with a new list
 
 Standard functions such as +-* can also be used
 
-## Example
+### Example
 ```python
 mat1 = Matrix([1, 2, 2], [4, 5, 6], [7, 8, 9])
 mat2 = Matrix([2, 6, 4], [7, 3, 5], [8, 2, 5])
@@ -28,7 +28,7 @@ print(ans1)
 ## Vectors
 Vectors function in a similar way to matrices.
 
-## Functions
+### Functions
 - dot -> This performs the dot product of two vectors (syntax: `vector1.dot(vector2)`)
 - cross -> This performs the cross product of two vectors (syntax: `vector1.cross(vector2)`)
 
