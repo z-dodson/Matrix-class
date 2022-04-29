@@ -1,3 +1,8 @@
+# TODO:
+# [ ] Make vector __str__ method act in the same way as the matrix __str__ method
+#     i.e. make the 'brackets' line up
+# [ ] Check every item in the matrix to make sure it is a number and not empty
+
 class Matrix:
     '''
     Base matrix class
@@ -130,8 +135,6 @@ class Matrix:
 
         return Matrix(*new_matrix)
 
-
-
     def __add__(self, other):
         new_matrix = []
         for i in range(len(self.matrix)):
@@ -210,27 +213,83 @@ class Matrix:
 
     def __str__(self):
         dim = self.dimensions()
+        
+        if dim[0] != 1:
+            # Make every item in column the same length
+            string_values = []
+            for j in range(len(self.matrix)):
+                string_values.append([])
+
+            for i in range(len(self.matrix)):
+                lens = []
+                column = []
+
+                for j in range(len(self.matrix[i])):
+                    lens.append(len(str(self.matrix[i][j])))
+                    column.append(str(self.matrix[i][j]))
+                
+                max_length = max(lens)
+
+                for j in range(len(column)):
+                    if (max_length - lens[j]) % 2 == 0:
+                        column[j] = " " * ((max_length - lens[j])//2) + column[j] + " " * ((max_length - lens[j])//2)
+                    else:
+                        column[j] = " " + " " * ((max_length - lens[j])//2) + column[j] + " " * ((max_length - lens[j])//2)
+
+                for i in range(len(column)):
+                    string_values[i].append(column[i])
+        else:
+            # Make every item in column the same length
+            string_values = []
+            for j in range(len(self.matrix)):
+                string_values.append([])
+
+            lens = []
+            column = []
+            for i in range(len(self.matrix)):
+
+                lens.append(len(str(self.matrix[i][0])))
+                column.append(str(self.matrix[i][0]))
+                
+            max_length = max(lens)
+
+            for j in range(len(column)):
+                if (max_length - lens[j]) % 2 == 0:
+                    column[j] = " " * ((max_length - lens[j])//2) + column[j] + " " * ((max_length - lens[j])//2)
+                else:
+                    column[j] = " " + " " * ((max_length - lens[j])//2) + column[j] + " " * ((max_length - lens[j])//2)
+
+            for i in range(len(column)):
+                string_values[i].append(column[i])
+
+            
+
+
         matrix_string = ""
         if dim[1] == 1:
-            matrix_string = "[" + " ".join(str(num) for num in self.matrix[0]) + "] "
+            matrix_string = "[" + " ".join(str(num) for num in string_values[0]) + "] "
         else:
-            for i in range(len(self.matrix)):
+            matrix_string_list = []
+            for i in range(len(string_values)):
+                matrix_string = ""
+                matrix_string = '  '.join(str(num) for num in string_values[i])
+
+                matrix_string_list.append(matrix_string)
+            maxlen = max(len(row) for row in matrix_string_list)
+            for i in range(len(matrix_string_list)):
+                matrix_string_list[i] += " " * (maxlen - len(matrix_string_list[i]))
                 if i == 0:
-                    matrix_string += "|‾ "
+                    matrix_string_list[i] = "|‾ " + matrix_string_list[i] + " ‾|"
+                    # matrix_string_list[i] += "‾|"
                 elif dim[1]-1 == i:
-                    matrix_string += "|_ "
+                    matrix_string_list[i] = "|_ " + matrix_string_list[i] + " _| "
+                    # matrix_string_list[i] += "_| "
                 else:
-                    matrix_string += "|  "
-                for j in range(len(self.matrix[i])):
-                    matrix_string += str(self.matrix[i][j])
-                    matrix_string += " "
-                if i == 0:
-                    matrix_string += "‾|"
-                elif dim[1]-1 == i:
-                    matrix_string += "_|"
-                else:
-                    matrix_string += " |"
-                matrix_string += "\n"
+                    matrix_string_list[i] = "|  " + matrix_string_list[i] + "  |"
+                    # matrix_string_list[i] += " |"
+            matrix_string = "\n".join(matrix_string_list)
+            
+
         return matrix_string[:-1]
 
     def __repr__(self):
@@ -277,9 +336,35 @@ class Vector(Matrix):
 
     def __str__(self):
         dim = self.dimensions()
+
+        
+        # Make every item in column the same length
+        string_values = []
+        for j in range(len(self.matrix)):
+            string_values.append([])
+
+        lens = []
+        column = []
+        for i in range(len(self.matrix)):
+
+            lens.append(len(str(self.matrix[i])))
+            column.append(str(self.matrix[i]))
+
+        max_length = max(lens)
+
+        for j in range(len(column)):
+            if (max_length - lens[j]) % 2 == 0:
+                column[j] = " " * ((max_length - lens[j])//2) + column[j] + " " * ((max_length - lens[j])//2)
+            else:
+                column[j] = " " + " " * ((max_length - lens[j])//2) + column[j] + " " * ((max_length - lens[j])//2)
+
+        for i in range(len(column)):
+            string_values[i].append(column[i])
+
+
         matrix_string = ""
         if dim[1] == 1:
-            matrix_string = "[" + " ".join(str(num) for num in self.matrix[0]) + "] "
+            matrix_string = "[" + " ".join(str(num) for num in string_values[0]) + "] "
         else:
             for i in range(len(self.matrix)):
                 if i == 0:
@@ -288,7 +373,7 @@ class Vector(Matrix):
                     matrix_string += "|_ "
                 else:
                     matrix_string += "|  "
-                matrix_string += str(self.matrix[i])
+                matrix_string += str(string_values[i][0])
                 matrix_string += " "
                 if i == 0:
                     matrix_string += "‾|"
@@ -344,3 +429,9 @@ def simultaneous_eq(matrix, vector):
     else:
         new_matrix = matrix.inverse()*vector
         return new_matrix
+
+mat = Matrix([-1, 1, 2], [3, -1, -2], [5, 10, 88888888888.888])
+vec = Vector([2.1, -2.5, 4.5555])
+ans = mat.inverse()*vec
+
+print(ans.round(3))
