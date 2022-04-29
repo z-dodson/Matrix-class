@@ -5,10 +5,6 @@ A class for storing matrices
 The standard class for matrices  
 Input a matrix in a list, separating each row with a new list
 
-## Matrix_List
-This class allows matrices to be entered as a series of lists  
-This inherits all other functions from the Matrix class.
-
 ## Functions
 - dimensions -> tuple (returns the dimensions of the matrix)
 - determinant -> float (calculates the determinant)
@@ -22,15 +18,19 @@ Standard functions such as +-* can also be used
 ## Example
 ```python
 mat1 = Matrix([1, 2, 2], [4, 5, 6], [7, 8, 9])
-mat2 = Matrix_string("1 2 2", "4 5 6", "7 8 9")
-inverse1 = mat1.inverse()
-inverse2 = mat2.inverse()
-inverse1 == inverse2  # True
-print(inverse1)
+mat2 = Matrix([2, 6, 4], [7, 3, 5], [8, 2, 5])
+ans1 = mat1*mat2
+ans2 = mat2*mat1
+ans1 == ans2 # False
+print(ans1)
 ```
 
 ## Vectors
-Vectors function in a similar way to matrices. There are no dedicated vector functions, but they can be used like a matrix
+Vectors function in a similar way to matrices.
+
+## Functions
+- dot -> This performs the dot product of two vectors (syntax: `vector1.dot(vector2)`)
+- cross -> This performs the cross product of two vectors (syntax: `vector1.cross(vector2)`)
 
 ## Simultaneous Equations
 Can solve simultaneous equations if given in matrix form. E.g.
