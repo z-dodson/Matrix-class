@@ -1,6 +1,5 @@
 from math import acos, pi
 
-
 class Matrix:
     '''
     Base matrix class
@@ -231,16 +230,19 @@ class Matrix:
         if dim[0] != 1:
             # Make every item in column the same length
             string_values = []
-            for j in range(len(self.matrix)):
+
+            for i in range(len(self.matrix)):
                 string_values.append([])
+                for j in range(dim[0]):
+                    string_values[i].append("")
 
             for i in range(len(self.matrix)):
                 lens = []
                 column = []
 
-                for j in range(len(self.matrix[i])):
-                    lens.append(len(str(self.matrix[i][j])))
-                    column.append(str(self.matrix[i][j]))
+                for j in range(dim[1]):
+                    lens.append(len(str(self.matrix[j][i])))
+                    column.append(str(self.matrix[j][i]))
 
                 max_length = max(lens)
 
@@ -250,8 +252,9 @@ class Matrix:
                     else:
                         column[j] = " " + " " * ((max_length - lens[j])//2) + column[j] + " " * ((max_length - lens[j])//2)
 
-                for i in range(len(column)):
-                    string_values[i].append(column[i])
+                for j in range(len(column)):
+                    string_values[j][i] = column[j]
+
         else:
             # Make every item in column the same length
             string_values = []
@@ -297,7 +300,7 @@ class Matrix:
                     # matrix_string_list[i] += "‾|"
                 elif dim[1]-1 == i:
                     matrix_string_list[i] = "|_ " + matrix_string_list[i] + " _| "
-                    # matrix_string_list[i] += "_| "
+                    # matrix_string_list[i] += "_| "``
                 else:
                     matrix_string_list[i] = "|  " + matrix_string_list[i] + "  |"
                     # matrix_string_list[i] += " |"
@@ -307,13 +310,17 @@ class Matrix:
         return matrix_string[:-1]
 
     def __repr__(self):
-        return self.__str__()
+        string = f"{self.__str__()}\nDimensions: {self.dimensions()}\nMatrix: {self.matrix}"
+        return string
 
     def __eq__(self, other):
         return self.matrix == other.matrix
 
     def __ne__(self, other):
         return not self.__eq__(other)
+
+    def __neg__(self):
+        return self.__mul__(-1)
 
     def __getitem__(self, index):
         return self.matrix[index[1]][index[0]]
@@ -462,12 +469,12 @@ class Power_Not_Positive_Error(Exception):
 
 class Unknow_Determinant(Exception):
     def __init__(self, dimx, dimy):
-        raise Exception('Cannot calculate the determinant for a {}x{} matrix'.format(dimx, dimy))
+        raise Exception(f'Cannot calculate the determinant for a {dimx}x{dimy} matrix')
 
 
 class Unknow_Inverse(Exception):
     def __init__(self, dimx, dimy):
-        raise Exception('Cannot calculate the inverse for a {}x{} matrix'.format(dimx, dimy))
+        raise Exception(f'Cannot calculate the inverse for a {dimx}x{dimy} matrix')
 
 
 class No_Inverse(Exception):
