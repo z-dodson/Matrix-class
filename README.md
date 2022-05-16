@@ -7,9 +7,9 @@ Input a matrix in a list, separating each row with a new list
 
 ### Functions
 - dimensions -> tuple (returns the dimensions of the matrix)
-- determinant -> float (calculates the determinant)
+- determinant -> float (calculates the determinant). Can also be done with abs(matrix)
 - transpose -> Matrix (transposes the matrix)
-- inverse -> Matrix (finds the inverse of the matrix. Can also be called with **-1 or abs(matrix))
+- inverse -> Matrix (finds the inverse of the matrix. Can also be called with **-1
 - cofactors -> Matrix (finds the matrix of cofactors)
 - minors -> Matrix (finds the matrix of minors)
 
