@@ -28,7 +28,7 @@ class Matrix:
             self.matrix.append(row)
 
     def dimensions(self):
-        return (len(self.matrix[0]), len(self.matrix))
+        return (len(self.matrix), len(self.matrix[0]))
 
     def determinant(self):
         if self.dimensions() == (3, 3):
@@ -169,21 +169,20 @@ class Matrix:
                 return Matrix(*new_matrix)
             else:
                 new_matrix = []
-                for i in range(self.dimensions()[1]):
+                for i in range(self.dimensions()[0]):
                     new_row = []
-                    for j in range(self.dimensions()[0]):
+                    for j in range(self.dimensions()[1]):
                         new_row.append(self.matrix[i][j] * other)
                     new_matrix.append(new_row)
                 return Matrix(*new_matrix)
         # check that matrices are compatible
         elif isinstance(self, Matrix) and isinstance(other, Matrix):
-            if self.dimensions()[0] == other.dimensions()[1]:
-                if not isinstance(other, Vector) and not isinstance(self, Vector) and isinstance(other, Matrix) and isinstance(self, Matrix): # Check that they are both matrices and not vectors
+            if self.dimensions()[1] == other.dimensions()[0]:                if not isinstance(other, Vector) and not isinstance(self, Vector) and isinstance(other, Matrix) and isinstance(self, Matrix): # Check that they are both matrices and not vectors
                     new_matrix = []
 
-                    for i in range(self.dimensions()[1]):
+                    for i in range(self.dimensions()[0]):
                         new_row = []
-                        for j in range(other.dimensions()[0]):
+                        for j in range(other.dimensions()[1]):
                             new_row.append(sum([self.matrix[i][k] * other.matrix[k][j] for k in range(len(self.matrix[i]))]))
                         new_matrix.append(new_row)
 
@@ -193,22 +192,22 @@ class Matrix:
                     if isinstance(other, Vector):
                         new_matrix = []
 
-                        for i in range(self.dimensions()[1]):
+                        for i in range(self.dimensions()[0]):
                             new_row = []
-                            for j in range(other.dimensions()[0]):
+                            for j in range(other.dimensions()[1]):
                                 new_row.append(sum([self.matrix[i][k] * other.matrix[k] for k in range(len(self.matrix[i]))]))
                             new_matrix.append(new_row)
                     elif isinstance(self, Vector):
                         new_matrix = []
 
-                        for i in range(self.dimensions()[1]):
+                        for i in range(self.dimensions()[0]):
                             new_row = []
-                            for j in range(other.dimensions()[0]):
+                            for j in range(other.dimensions()[1]):
                                 new_row.append(sum([self.matrix[i][k] * other.matrix[k][j] for k in range(len(self.matrix[i]))]))
                             new_matrix.append(new_row)
                     return Matrix(*new_matrix)
-        else:
-            raise Not_Compatible_Error()
+            else:
+                raise Not_Compatible_Error()
 
     def __rmul__(self, other):
         if isinstance(other, int) or isinstance(other, float):
@@ -227,20 +226,20 @@ class Matrix:
     def __str__(self):
         dim = self.dimensions()
 
-        if dim[0] != 1:
+        if dim[1] != 1:
             # Make every item in column the same length
             string_values = []
 
-            for i in range(len(self.matrix)):
+            for i in range(dim[0]):
                 string_values.append([])
-                for j in range(dim[0]):
+                for j in range(dim[1]):
                     string_values[i].append("")
 
-            for i in range(len(self.matrix)):
+            for i in range(dim[1]):
                 lens = []
                 column = []
 
-                for j in range(dim[1]):
+                for j in range(dim[0]):
                     lens.append(len(str(self.matrix[j][i])))
                     column.append(str(self.matrix[j][i]))
 
@@ -258,12 +257,12 @@ class Matrix:
         else:
             # Make every item in column the same length
             string_values = []
-            for j in range(len(self.matrix)):
+            for j in range(dim[0]):
                 string_values.append([])
 
             lens = []
             column = []
-            for i in range(len(self.matrix)):
+            for i in range(dim[0]):
 
                 lens.append(len(str(self.matrix[i][0])))
                 column.append(str(self.matrix[i][0]))
@@ -283,7 +282,7 @@ class Matrix:
 
 
         matrix_string = ""
-        if dim[1] == 1:
+        if dim[0] == 1:
             matrix_string = "[" + " ".join(str(num) for num in string_values[0]) + "] "
         else:
             matrix_string_list = []
@@ -298,7 +297,7 @@ class Matrix:
                 if i == 0:
                     matrix_string_list[i] = "|‾ " + matrix_string_list[i] + " ‾|"
                     # matrix_string_list[i] += "‾|"
-                elif dim[1]-1 == i:
+                elif dim[0]-1 == i:
                     matrix_string_list[i] = "|_ " + matrix_string_list[i] + " _| "
                     # matrix_string_list[i] += "_| "``
                 else:
@@ -411,13 +410,13 @@ class Vector(Matrix):
 
 
         matrix_string = ""
-        if dim[1] == 1:
+        if dim[0] == 1:
             matrix_string = "[" + " ".join(str(num) for num in string_values[0]) + "] "
         else:
-            for i in range(len(self.matrix)):
+            for i in range(dim[0]):
                 if i == 0:
                     matrix_string += "|‾ "
-                elif dim[1]-1 == i:
+                elif dim[0]-1 == i:
                     matrix_string += "|_ "
                 else:
                     matrix_string += "|  "
@@ -425,7 +424,7 @@ class Vector(Matrix):
                 matrix_string += " "
                 if i == 0:
                     matrix_string += "‾|"
-                elif dim[1]-1 == i:
+                elif dim[0]-1 == i:
                     matrix_string += "_|"
                 else:
                     matrix_string += " |"
@@ -439,7 +438,7 @@ class Vector(Matrix):
         return num**(1/2)
 
     def dimensions(self):
-        return (1, len(self.matrix))
+        return (len(self.matrix), 1)
 
     def determinant(self):
         pass
@@ -493,7 +492,7 @@ class Cannot_Perform_Cross_Product(Exception):
 
 
 def simultaneous_eq(matrix, vector):
-    if matrix.dimensions()[1] != (vector.dimensions()[1]):
+    if matrix.dimensions()[1] != (vector.dimensions()[0]):
         raise Not_Compatible_Error()
     else:
         new_matrix = matrix.inverse()*vector
