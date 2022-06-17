@@ -1,6 +1,9 @@
 # Matrix-class
 A class for storing matrices  
 
+## Problems
+There appears to be problems when not using square matrices
+
 ## Matrix
 The standard class for matrices  
 Input a matrix in a list, separating each row with a new list
