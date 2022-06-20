@@ -177,7 +177,8 @@ class Matrix:
                 return Matrix(*new_matrix)
         # check that matrices are compatible
         elif isinstance(self, Matrix) and isinstance(other, Matrix):
-            if self.dimensions()[1] == other.dimensions()[0]:                if not isinstance(other, Vector) and not isinstance(self, Vector) and isinstance(other, Matrix) and isinstance(self, Matrix): # Check that they are both matrices and not vectors
+            if self.dimensions()[1] == other.dimensions()[0]:
+                if not isinstance(other, Vector) and not isinstance(self, Vector) and isinstance(other, Matrix) and isinstance(self, Matrix): # Check that they are both matrices and not vectors
                     new_matrix = []
 
                     for i in range(self.dimensions()[0]):
@@ -322,7 +323,7 @@ class Matrix:
         return self.__mul__(-1)
 
     def __getitem__(self, index):
-        return self.matrix[index[1]][index[0]]
+        return self.matrix[index]
 
     def __setitem__(self, index, value):
         self.matrix[index[1]][index[0]] = float(value)
@@ -497,3 +498,6 @@ def simultaneous_eq(matrix, vector):
     else:
         new_matrix = matrix.inverse()*vector
         return new_matrix
+
+m = Matrix([1, 2, 3], [4, 5, 6], [7, 8, 9])
+print(m[0][2])
