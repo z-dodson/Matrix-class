@@ -139,6 +139,18 @@ class Matrix:
 
         return Matrix(*new_matrix)
 
+    def remove(self,*items):
+        for item in items:
+            if item in self.matrix: self.matrix.remove(item)
+    def append(self,*items):
+        for item in items: self.matrix.append(item)
+    def replace(self,existingItem, newItem):
+        if existingItem in self.matrix: 
+            i = self.index(existingItem)
+            self.matrix = self.matrix[:i]+[newItem]+self.matrix[i+1:]
+    def index(self,item): return self.matrix.index(item)
+
+
     def __add__(self, other):
         new_matrix = []
         for i in range(len(self.matrix)):
@@ -332,11 +344,8 @@ class Matrix:
         return self.determinant()
 
     def __contains__(self, item):
-        found = False
-        for i in self.matrix:
-            if item in i:
-                found = True
-        return found
+        if item in self.matrix: return True
+        return False
 
 
 class Vector(Matrix):
@@ -498,6 +507,3 @@ def simultaneous_eq(matrix, vector):
     else:
         new_matrix = matrix.inverse()*vector
         return new_matrix
-
-m = Matrix([1, 2, 3], [4, 5, 6], [7, 8, 9])
-print(m[0][2])
